@@ -148,8 +148,13 @@ namespace PushSharp.Apple
                         try {
                             await networkStream.WriteAsync(data, 0, data.Length).ConfigureAwait(false);
                             break;
-                        } catch (Exception ex) when (i != Configuration.InternalBatchFailureRetryCount) {
-                            Log.Info("APNS-CLIENT[{0}]: Retrying Batch: Batch ID={1}, Error={2}", id, batchId, ex);
+                        } catch (Exception ex) {
+                            if (i != Configuration.InternalBatchFailureRetryCount) {
+                                Log.Info("APNS-CLIENT[{0}]: Retrying Batch: Batch ID={1}, Error={2}", id, batchId, ex);
+                            }
+                            else {
+                                throw ex;
+                            }
                         }
                     }
 
